@@ -16,7 +16,7 @@ ctx.translate(300, 200);
 ctx.font = '14px arial';
 <?php
 $divnum = '6';
-$handle = fopen('soldungc.txt', "r");
+$handle = fopen('maps/soldungc.txt', "r");
 
 	if ($handle) {
     while (($line = fgets($handle)) !== false) {
