@@ -11,3 +11,5 @@ unless use the translate property
 TODO: Change maps to choose how to load from likely a GET or POST if making a left hand bar choice
 
 TODO: Add stuff to render in what is on layers 1-3
+
+TODO: Maybe add Z layer and allow min/max heights to display
