@@ -7,11 +7,9 @@ You will want your maps in /maps. and it will have the EQ repeated map backgroun
 
 You can view a working example on https://eqresource.com/test/maptesting.php
 
-TODO: Set up the maps dynamically on page by maths, canvas in html5 doesn't seem to like using past y=0 and x=0
-unless use the translate property
+TODO: Change maps to choose how to load from likely a GET or POST or make some kind of list to pick
 
-TODO: Change maps to choose how to load from likely a GET or POST if making a left hand bar choice
-
-TODO: Add stuff to render in what is on layers 1-3
+TODO: Add stuff to render in what is on layers 1-3 -- This might or might not happen, 
+looping through 6 times instead of 2 might be excessive when you can just manual combine all the 3 map pieces to 1 file instead
 
 TODO: Maybe add Z layer and allow min/max heights to display

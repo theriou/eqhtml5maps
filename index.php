@@ -121,7 +121,7 @@ ctx.font = '14px arial';
 		//text to display on the html5 map, only allow specific characters
 		$textdisplay = preg_replace("/[^0-9A-Za-z_()~]+/", "", $row_data[7]);
 ?>
-	ctx.fillText('<?php echo $textdisplay; ?>', <?php echo $tyline / $divnum; ?>, <?php echo $row_data[1] / $divnum;?>);
+	ctx.fillText('<?php echo $textdisplay; ?>', <?php echo ($tyline + $lineymin) / $divnumy; ?>, <?php echo ($row_data[1] + $linexmin) / $divnumx;?>);
 <?php
     } else { 
 	// The text file line didn't start with a P, so we are processing the Lines and dividing them by divnum
