@@ -79,8 +79,8 @@ $handle = fopen('maps/poknowledge.txt', "r");
 	// The map in EQ renders to the html5 canvas x,y at large values, in some zones this is in the 2000-3000 range, 
 	// So we need to divide all #'s by a value to get it to not require a like 4000 pixel height/width page
 	// This should let the page be dynamic to the chosen width and height
-	$divnumy = $lineytotal / $canvasheight;
-	$divnumx = $linextotal / $canvaswidth;
+	$divnumy = $lineytotal / ($canvasheight * .9);
+	$divnumx = $linextotal / ($canvaswidth * .9);
 	
 	$i++;
 	}
@@ -121,7 +121,7 @@ ctx.font = '14px arial';
 		//text to display on the html5 map, only allow specific characters
 		$textdisplay = preg_replace("/[^0-9A-Za-z_()~]+/", "", $row_data[7]);
 ?>
-	ctx.fillText('<?php echo $textdisplay; ?>', <?php echo ($tyline + $lineymin) / $divnumy; ?>, <?php echo ($row_data[1] + $linexmin) / $divnumx;?>);
+	ctx.fillText('<?php echo $textdisplay; ?>', <?php echo ($tyline + $lineymin) / $divnumy; ?>, <?php echo ($row_data[1] + $linexmin) / $divnumx; ?>);
 <?php
     } else { 
 	// The text file line didn't start with a P, so we are processing the Lines and dividing them by divnum
