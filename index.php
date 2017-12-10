@@ -33,10 +33,10 @@ $handle = fopen('maps/poknowledge.txt', "r");
 	
 	// set the values to the first #'s found
 	if ($i == '0') { 
-	$maxyline = $mathyline1; 
-	$maxxline = $mathxline1; 
-	$minyline = $mathyline1; 
-	$minxline = $mathxline1; 
+	$maxyline = $mathyline1;
+	$maxxline = $mathxline1;
+	$minyline = $mathyline1;
+	$minxline = $mathxline1;
 	}
 	
 	// 1st loop, get the minY, maxY, minX, maxX
@@ -79,8 +79,8 @@ $handle = fopen('maps/poknowledge.txt', "r");
 	// The map in EQ renders to the html5 canvas x,y at large values, in some zones this is in the 2000-3000 range, 
 	// So we need to divide all #'s by a value to get it to not require a like 4000 pixel height/width page
 	// This should let the page be dynamic to the chosen width and height
-	$divnumy = $lineytotal / ($canvasheight * .9);
-	$divnumx = $linextotal / ($canvaswidth * .9);
+	$divnumy = $lineytotal / $canvasheight;
+	$divnumx = $linextotal / $canvaswidth;
 	
 	$i++;
 	}
@@ -97,17 +97,17 @@ body {
 }
 </style>
 <body>
+<?php //if file exists, go line by line in a loop
+	if ($filefail != '1') {
+?>
 <canvas id="myCanvas" width="<?php echo $canvaswidth; ?>" height="<?php echo $canvasheight; ?>">
 Your browser does not support the canvas element.
 </canvas>
 <script>
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-ctx.font = '14px arial';
+ctx.font = '10px arial';
 <?php
-	
-	//if file exists, go line by line in a loop
-	if ($filefail != '1') {
 	fseek($handle, 0);
     while (($line = fgets($handle)) !== false) {
 
@@ -120,38 +120,42 @@ ctx.font = '14px arial';
 		
 		//text to display on the html5 map, only allow specific characters
 		$textdisplay = preg_replace("/[^0-9A-Za-z_()~]+/", "", $row_data[7]);
+		$trcolor = preg_replace("/[^0-9.]+/", "", $row_data[3]);
+		$tgcolor = preg_replace("/[^0-9.]+/", "", $row_data[4]);
+		$tbcolor = preg_replace("/[^0-9.]+/", "", $row_data[5]);
 ?>
+	ctx.textAlign="center";
+	ctx.fillStyle = 'rgb(<?php echo $trcolor; ?>, <?php echo $tgcolor; ?>, <?php echo $tbcolor; ?>)';
 	ctx.fillText('<?php echo $textdisplay; ?>', <?php echo ($tyline + $lineymin) / $divnumy; ?>, <?php echo ($row_data[1] + $linexmin) / $divnumx; ?>);
 <?php
-    } else { 
+    } else {
 	// The text file line didn't start with a P, so we are processing the Lines and dividing them by divnum
 	// then we will render the lines while this loops through the text file
 	// also adding the line minimums to push it into Canvas's 0,0 start system
 	$yline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
-	$yline1 = ($yline11 + $lineymin) / $divnumy; 
+	$yline1 = ($yline11 + $lineymin) / $divnumy;
 	$xline1 = ($row_data[1] + $linexmin) / $divnumx;
 	$yline2 = ($row_data[3] + $lineymin) / $divnumy;
 	$xline2 = ($row_data[4] + $linexmin) / $divnumx;
 	$rcolor = preg_replace("/[^0-9.]+/", "", $row_data[6]);
 	$gcolor = preg_replace("/[^0-9.]+/", "", $row_data[7]);
-	$bcolor = preg_replace("/[^0-9.]+/", "", $row_data[8]); 
-	
+	$bcolor = preg_replace("/[^0-9.]+/", "", $row_data[8]);
 ?>
 		ctx.beginPath();
 		ctx.moveTo(<?php echo $yline1; ?>,<?php echo $xline1; ?>);
 		ctx.lineTo(<?php echo $yline2; ?>,<?php echo $xline2; ?>);
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'rgb(<?php echo $rcolor; ?>, <?php echo $gcolor; ?>, <?php echo $bcolor; ?>)';
-		ctx.stroke(); 
+		ctx.stroke();
 	<?php }
 	}
 	fclose($handle);
-	}
-	else
-	{
-		echo "Map Failed to load or does not exist, try again later or pick a different map.";
-	}
 ?>
 </script>
+<?php
+	} else {
+			echo "Map Failed to load or does not exist, try again later or pick a different map.";
+			}
+?>
 </body>
 </html>
