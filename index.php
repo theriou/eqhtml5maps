@@ -1,21 +1,32 @@
-<?php
+<?php include_once('includes/maprender.inc');
+
 // set canvas values
 $canvaswidth = '600';
 $canvasheight = '600';
 
+// if map is not set or it is blank - fail
+// otherwise try to get min/max to fit in canvas
+if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) {
+    $mappicked = '1';
+	}
+
+else {
+
+$mapsource1 = strtolower($_GET['map']);
+$mapsource = preg_replace("/[^a-z]+/", "", $mapsource1);
+
+$filepath = 'maps/'.$mapsource.'.txt';
+$filepath1 = 'maps/'.$mapsource.'_1.txt';
+$filepath2 = 'maps/'.$mapsource.'_2.txt';
+$filepath3 = 'maps/'.$mapsource.'_3.txt';
+
+if (file_exists($filepath)) {
+
 // setting default #'s for php to like them numeric
 $i = '0';
-$maxyline1 = '0';
-$maxyline2 = '0';
-$minyline1 = '0';
-$minyline2 = '0';
-$maxxline1 = '0';
-$maxxline2 = '0';
-$minxline1 = '0';
-$minxline2 = '0';
 
 // open file
-$handle = fopen('maps/poknowledge.txt', "r");
+$handle = fopen($filepath, "r");
 
 	// if file exists, go line by line in a loop
 	if ($handle) {
@@ -84,10 +95,12 @@ $handle = fopen('maps/poknowledge.txt', "r");
 	
 	$i++;
 	}
-	} else {
-    // error opening the file.
-	$filefail = '1';
 	}
+}
+else {
+    // file doesn't exist
+	$filefail = '1';
+} }
 ?>
 <html>
 <style>
@@ -97,7 +110,19 @@ body {
 }
 </style>
 <body>
-<?php //if file exists, go line by line in a loop
+<?php 
+	// if no map was found in the map GET or it was blank
+	// give a list of maps in the /maps folder for now to pick one
+	if ($mappicked == '1')
+	{
+		foreach (glob("maps/*.txt") as $filename) { 
+		$filename = str_replace("maps/", "", $filename);
+		$filename = str_replace(".txt", "", $filename); ?>
+		<a href="maptesting.php?map=<?php echo $filename; ?>"><?php echo $filename; ?></a><?php echo "<br>";
+		}
+	}
+	
+	//if the base file existed, progress to rendering it on page
 	if ($filefail != '1') {
 ?>
 <canvas id="myCanvas" width="<?php echo $canvaswidth; ?>" height="<?php echo $canvasheight; ?>">
@@ -108,48 +133,25 @@ var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 ctx.font = '10px arial';
 <?php
-	fseek($handle, 0);
-    while (($line = fgets($handle)) !== false) {
-
-    //get row data
-    $row_data = explode(',', $line);
-	
-	//if the line begins with a P - it is a Point on the map, we need to remove the P and just get the #
-	if (strpos($row_data[0], 'P') !== false) {
-		$tyline = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
-		
-		//text to display on the html5 map, only allow specific characters
-		$textdisplay = preg_replace("/[^0-9A-Za-z_()~]+/", "", $row_data[7]);
-		$trcolor = preg_replace("/[^0-9.]+/", "", $row_data[3]);
-		$tgcolor = preg_replace("/[^0-9.]+/", "", $row_data[4]);
-		$tbcolor = preg_replace("/[^0-9.]+/", "", $row_data[5]);
-?>
-	ctx.textAlign="center";
-	ctx.fillStyle = 'rgb(<?php echo $trcolor; ?>, <?php echo $tgcolor; ?>, <?php echo $tbcolor; ?>)';
-	ctx.fillText('<?php echo $textdisplay; ?>', <?php echo ($tyline + $lineymin) / $divnumy; ?>, <?php echo ($row_data[1] + $linexmin) / $divnumx; ?>);
-<?php
-    } else {
-	// The text file line didn't start with a P, so we are processing the Lines and dividing them by divnum
-	// then we will render the lines while this loops through the text file
-	// also adding the line minimums to push it into Canvas's 0,0 start system
-	$yline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
-	$yline1 = ($yline11 + $lineymin) / $divnumy;
-	$xline1 = ($row_data[1] + $linexmin) / $divnumx;
-	$yline2 = ($row_data[3] + $lineymin) / $divnumy;
-	$xline2 = ($row_data[4] + $linexmin) / $divnumx;
-	$rcolor = preg_replace("/[^0-9.]+/", "", $row_data[6]);
-	$gcolor = preg_replace("/[^0-9.]+/", "", $row_data[7]);
-	$bcolor = preg_replace("/[^0-9.]+/", "", $row_data[8]);
-?>
-		ctx.beginPath();
-		ctx.moveTo(<?php echo $yline1; ?>,<?php echo $xline1; ?>);
-		ctx.lineTo(<?php echo $yline2; ?>,<?php echo $xline2; ?>);
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = 'rgb(<?php echo $rcolor; ?>, <?php echo $gcolor; ?>, <?php echo $bcolor; ?>)';
-		ctx.stroke();
-	<?php }
+	// if base file is found - render it
+	if (file_exists($filepath)) {
+	map_render($filepath);
 	}
-	fclose($handle);
+	
+	// if base_1 file is found - render it
+	if (file_exists($filepath1)) {
+	map_render($filepath1);
+	}
+	
+	// if base_2 file is found - render it
+	if (file_exists($filepath2)) {
+	map_render($filepath2);
+	}
+	
+	// if base_3 file is found - render it
+	if (file_exists($filepath3)) {
+	map_render($filepath3);
+	}
 ?>
 </script>
 <?php
