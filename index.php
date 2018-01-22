@@ -46,8 +46,8 @@ $handle = fopen($filepath, "r");
 	if ($i == '0') { 
 	$maxyline = $mathyline1;
 	$maxxline = $mathxline1;
-	$minyline = $mathyline1;
-	$minxline = $mathxline1;
+	$minyline = $mathyline2;
+	$minxline = $mathxline2;
 	}
 	
 	// 1st loop, get the minY, maxY, minX, maxX
