@@ -1,4 +1,4 @@
-<?php include_once('includes/maprender.inc');
+<?php require_once('includes/maprender.php');
 
 // set canvas values
 $canvaswidth = '600';
@@ -8,7 +8,7 @@ $canvasheight = '600';
 // otherwise try to get min/max to fit in canvas
 if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) {
     $mappicked = '1';
-	}
+}
 
 else {
 
