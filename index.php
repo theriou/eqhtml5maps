@@ -117,8 +117,12 @@ body {
 	{
 		foreach (glob("maps/*.txt") as $filename) { 
 		$filename = str_replace("maps/", "", $filename);
-		$filename = str_replace(".txt", "", $filename); ?>
-		<a href="maptesting.php?map=<?php echo $filename; ?>"><?php echo $filename; ?></a><?php echo "<br>";
+		$filename = str_replace(".txt", "", $filename);
+			if (stripos($filename, "_") !== false) {
+				// ignore files with _ in them and only list the base files
+			} else {
+				?><a href="maptesting.php?map=<?php echo $filename; ?>"><?php echo $filename; ?></a><?php echo "<br>";
+			}
 		}
 	}
 	
