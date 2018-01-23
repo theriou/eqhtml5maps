@@ -4,6 +4,10 @@
 $canvaswidth = '600';
 $canvasheight = '600';
 
+// stuff past this point shouldn't need to be touched
+// unless you would want to embed it in to a page
+
+
 // if map is not set or it is blank - fail
 // otherwise try to get min/max to fit in canvas
 if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) {
@@ -19,6 +23,24 @@ $filepath = 'maps/'.$mapsource.'.txt';
 $filepath1 = 'maps/'.$mapsource.'_1.txt';
 $filepath2 = 'maps/'.$mapsource.'_2.txt';
 $filepath3 = 'maps/'.$mapsource.'_3.txt';
+
+
+// some older maps have their layout on layer 1
+// possibly other ones besides the base layer
+// so we need to find the first one that might be valid
+	if (filesize($filepath) < '50') { 
+		$filepath = $filepath1;
+	}
+	elseif (filesize($filepath1) < '50') { 
+		$filepath = $filepath2;
+	}
+	elseif (filesize($filepath2) < '50') { 
+		$filepath = $filepath3;
+	}
+	else {
+		$filefail = '1';
+	}
+
 
 if (file_exists($filepath)) {
 
@@ -160,7 +182,7 @@ ctx.font = '10px arial';
 </script>
 <?php
 	} else {
-			echo "Map Failed to load or does not exist, try again later or pick a different map.";
+		echo "Map Failed to load or doesn't exist in a valid format. Try again later or pick a different map.";
 			}
 ?>
 </body>
