@@ -28,14 +28,20 @@ $filepath3 = 'maps/'.$mapsource.'_3.txt';
 // some older maps have their layout on layer 1
 // possibly other ones besides the base layer
 // so we need to find the first one that might be valid
-	if (filesize($filepath) < '50') { 
-		$filepath = $filepath1;
+	if (file_exists($filepath)) { 
+		if (filesize($filepath) < '50') {
+			$filepath = $filepath1;
+		}
 	}
-	elseif (filesize($filepath1) < '50') { 
-		$filepath = $filepath2;
+	elseif (file_exists($filepath1)) {
+		if (filesize($filepath1) < '50') { 
+			$filepath = $filepath2;
+		}
 	}
-	elseif (filesize($filepath2) < '50') { 
-		$filepath = $filepath3;
+	elseif (file_exists($filepath2)) { 
+		if (filesize($filepath2) < '50') { 
+			$filepath = $filepath3;
+		}
 	}
 	else {
 		$filefail = '1';
