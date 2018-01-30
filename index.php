@@ -11,7 +11,7 @@ $canvasheight = '600';
 // if map is not set or it is blank - fail
 // otherwise try to get min/max to fit in canvas
 if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) {
-    $mappicked = '1';
+    $mappicked = '0';
 }
 
 else {
@@ -30,31 +30,45 @@ $filepath3 = 'maps/'.$mapsource.'_3.txt';
 // so we need to find the first one that might be valid
 	if (file_exists($filepath)) { 
 		if (filesize($filepath) < '50') {
-			$filepath = $filepath1;
+			$filepathini = $filepath1;
+		}
+		else {
+			$filepathini = $filepath;
 		}
 	}
 	elseif (file_exists($filepath1)) {
 		if (filesize($filepath1) < '50') { 
-			$filepath = $filepath2;
+			$filepathini = $filepath2;
+		}
+		else {
+			$filepathini = $filepath1;
 		}
 	}
 	elseif (file_exists($filepath2)) { 
 		if (filesize($filepath2) < '50') { 
-			$filepath = $filepath3;
+			$filepathini = $filepath3;
+		}
+		else {
+			$filepathini = $filepath2;
 		}
 	}
-	else {
-		$filefail = '1';
+	elseif (file_exists($filepath3)) { 
+		if (filesize($filepath3) < '50') { 
+			$filefail = '1';
+		}
+		else {
+			$filepathini = $filepath3;
+		}
 	}
 
 
-if (file_exists($filepath)) {
+if (file_exists($filepathini)) {
 
 // setting default #'s for php to like them numeric
 $i = '0';
 
 // open file
-$handle = fopen($filepath, "r");
+$handle = fopen($filepathini, "r");
 
 	// if file exists, go line by line in a loop
 	if ($handle) {
@@ -141,7 +155,7 @@ body {
 <?php 
 	// if no map was found in the map GET or it was blank
 	// give a list of maps in the /maps folder for now to pick one
-	if ($mappicked == '1')
+	if ($mappicked == '0')
 	{
 		foreach (glob("maps/*.txt") as $filename) { 
 		$filename = str_replace("maps/", "", $filename);
