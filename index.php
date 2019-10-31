@@ -17,7 +17,7 @@ if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) {
 else {
 
 $mapsource1 = strtolower($_GET['map']);
-$mapsource = preg_replace("/[^a-z]+/", "", $mapsource1);
+$mapsource = preg_replace("/[^a-z0-9]+/", "", $mapsource1);
 
 $filepath = 'maps/'.$mapsource.'.txt';
 $filepath1 = 'maps/'.$mapsource.'_1.txt';
