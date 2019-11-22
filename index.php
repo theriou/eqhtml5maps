@@ -1,11 +1,10 @@
 <?php require_once('includes/maprender.php');
 
-// set canvas values
-$canvaswidth = '600';
-$canvasheight = '600';
+// set canvas max width, height will be dynamic to keep Aspect Ratio intact
+$canvaswidth = '800';
 
 // stuff past this point shouldn't need to be touched
-// unless you would want to embed it in to a page
+// unless you want to embed it in a page
 
 
 // if map is not set or it is blank - fail
@@ -25,8 +24,7 @@ $filepath2 = 'maps/'.$mapsource.'_2.txt';
 $filepath3 = 'maps/'.$mapsource.'_3.txt';
 
 
-// some older maps have their layout on layer 1
-// possibly other ones besides the base layer
+// some older maps have their layout on layer 1 with an empty base
 // so we need to find the first one that might be valid
 	if (file_exists($filepath)) { 
 		if (filesize($filepath) < '50') {
@@ -64,7 +62,6 @@ $filepath3 = 'maps/'.$mapsource.'_3.txt';
 
 if (file_exists($filepathini)) {
 
-// setting default #'s for php to like them numeric
 $i = '0';
 
 // open file
@@ -74,10 +71,10 @@ $handle = fopen($filepathini, "r");
 	if ($handle) {
     while (($line = fgets($handle)) !== false) {
 
-    // get row data
+    // get map row data
     $row_data = explode(',', $line);
 	
-	// adding variables from the data
+	// adding variables from the data, only the #'s
 	$mathyline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 	$mathyline1 = $mathyline11; 
 	$mathxline1 = $row_data[1];
@@ -92,7 +89,7 @@ $handle = fopen($filepathini, "r");
 	$minxline = $mathxline2;
 	}
 	
-	// 1st loop, get the minY, maxY, minX, maxX
+	// get the minY, maxY, minX, maxX
 	if ($mathyline1 > $maxyline) {
 		$maxyline = $mathyline1;
 	}
@@ -118,22 +115,24 @@ $handle = fopen($filepathini, "r");
 		$minxline = $mathxline2;
 	}
 	
-	// making all values positive to use in the next part
+	// making all values positive, canvas can only start at 0,0 it is not Cartesian
 	if ($maxyline < '0') { $lineymax = $maxyline * -1; } else { $lineymax = $maxyline; }
 	if ($minyline < '0') { $lineymin = $minyline * -1; } else { $lineymin = $minyline; }
 	if ($maxxline < '0') { $linexmax = $maxxline * -1; } else { $linexmax = $maxxline; }
 	if ($minxline < '0') { $linexmin = $minxline * -1; } else { $linexmin = $minxline; }
 	
-	// adding the 2 together to get the max distance between the 2 x points and 2 y points
+	// adding the 2 together to get max distance between the 2 x points and 2 y points
 	$lineytotal = $lineymax + $lineymin;
 	$linextotal = $linexmax + $linexmin;
 	
 	
-	// The map in EQ renders to the html5 canvas x,y at large values, in some zones this is in the 2000-3000 range, 
-	// So we need to divide all #'s by a value to get it to not require a like 4000 pixel height/width page
-	// This should let the page be dynamic to the chosen width and height
-	$divnumy = $lineytotal / $canvasheight;
-	$divnumx = $linextotal / $canvaswidth;
+	// The map in EQ renders to the html5 canvas x,y at large values by default
+	// In some zones this is can be in the 2000-3000 range
+	// So we need to divide all #'s to not require a like 4000 pixel height/width page
+	// This should keep the Aspect Ratio intact while +/- the Height dynamically
+	$divnumy = $lineytotal / $canvaswidth;
+	$divnumx = $divnumy;
+	$canvasheight = (($linextotal / $lineytotal) * $canvaswidth) + 5;
 	
 	$i++;
 	}
@@ -145,30 +144,33 @@ else {
 } }
 ?>
 <html>
+<head>
+<title><?php if ($mapsource) { echo "Map of ".$mapsource; } else { echo "Choose a Map"; } ?></title>
 <style>
 body {
     background-image: url("images/cart.png");
     background-repeat: repeat;
 }
 </style>
+</head>
 <body>
 <?php 
 	// if no map was found in the map GET or it was blank
-	// give a list of maps in the /maps folder for now to pick one
+	// give a list of maps in the /maps folder to pick one
 	if ($mappicked == '0')
 	{
 		foreach (glob("maps/*.txt") as $filename) { 
 		$filename = str_replace("maps/", "", $filename);
 		$filename = str_replace(".txt", "", $filename);
 			if (stripos($filename, "_") !== false) {
-				// ignore files with _ in them and only list the base files
+				// ignore files with _ in them and only list the base file versions
 			} else {
 				?><a href="maptesting.php?map=<?php echo $filename; ?>"><?php echo $filename; ?></a><?php echo "<br>";
 			}
 		}
 	}
 	
-	//if the base file existed, progress to rendering it on page
+	// if the base file existed, continue to render
 	if ($filefail != '1') {
 ?>
 <canvas id="myCanvas" width="<?php echo $canvaswidth; ?>" height="<?php echo $canvasheight; ?>">

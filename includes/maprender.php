@@ -6,14 +6,15 @@ function map_render($filepathfull)
 	$handle = fopen($filepathfull, "r");
     while (($line = fgets($handle)) !== false) {
 
-    //get row data
+    // get map row data
     $row_data = explode(',', $line);
 	
-	//if the line begins with a P - it is a Point on the map, we need to remove the P and just get the #
+	// if the line begins with a P - it is a Point on the map
+	// we need to remove the P and just get the # for its coords
 	if (strpos($row_data[0], 'P') !== false) {
 		$tyline = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 		
-		//text to display on the html5 map, only allow specific characters
+		// text to display on the html5 map, only allow specific characters
 		$textdisplay = preg_replace("/[^0-9A-Za-z_()~]+/", "", $row_data[7]);
 		$trcolor = preg_replace("/[^0-9.]+/", "", $row_data[3]);
 		$tgcolor = preg_replace("/[^0-9.]+/", "", $row_data[4]);
@@ -23,9 +24,9 @@ function map_render($filepathfull)
 		echo "ctx.fillText('".$textdisplay."', ".(($tyline + $lineymin) / $divnumy).", ".(($row_data[1] + $linexmin) / $divnumx).");";
 		
     } else {
-	// The text file line didn't start with a P, so we are processing the Lines and dividing them by divnum
-	// then we will render the lines while this loops through the text file
-	// also adding the line minimums to push it into Canvas's 0,0 start system
+	// The text file line didn't start with a P, so process the Lines
+	// then render the lines while this loops through the text file
+	// then adding the line mins to push it to start at 0,0 since it is not Cartesian
 	$yline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 	$yline1 = ($yline11 + $lineymin) / $divnumy;
 	$xline1 = ($row_data[1] + $linexmin) / $divnumx;
