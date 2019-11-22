@@ -1,7 +1,7 @@
 <?php
 function map_render($filepathfull)
 	{
-		global $divnumy, $divnumx, $lineymin, $linexmin;
+		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline;
 	
 	$handle = fopen($filepathfull, "r");
     while (($line = fgets($handle)) !== false) {
