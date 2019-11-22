@@ -19,9 +19,13 @@ function map_render($filepathfull)
 		$trcolor = preg_replace("/[^0-9.]+/", "", $row_data[3]);
 		$tgcolor = preg_replace("/[^0-9.]+/", "", $row_data[4]);
 		$tbcolor = preg_replace("/[^0-9.]+/", "", $row_data[5]);
-		echo "ctx.textAlign=\"center\";";
+		$rowdatax = ($row_data[1] + $linexmin) / $divnumx;
+		$rowdatay = ($tyline + $lineymin) / $divnumy;
+		if ($minyline > ($tyline - (strlen($textdisplay) * 4 ))) { echo "ctx.textAlign=\"left\";"; }
+		elseif ($maxyline < ($tyline + (strlen($textdisplay) * 4 ))) { echo "ctx.textAlign=\"right\";"; }
+		else { echo "ctx.textAlign=\"center\";"; }
 		echo "ctx.fillStyle = 'rgb(". $trcolor. ", ".$tgcolor.", ". $tbcolor.")';";
-		echo "ctx.fillText('".$textdisplay."', ".(($tyline + $lineymin) / $divnumy).", ".(($row_data[1] + $linexmin) / $divnumx).");";
+		echo "ctx.fillText('".$textdisplay."', ". $rowdatay .", ". $rowdatax .");";
 		
     } else {
 	// The text file line didn't start with a P, so process the Lines
