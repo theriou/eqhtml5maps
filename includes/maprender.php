@@ -1,7 +1,7 @@
 <?php
 function map_render($filepathfull)
 	{
-		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline;
+		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline, $fontsize;
 	
 	$handle = fopen($filepathfull, "r");
     while (($line = fgets($handle)) !== false) {
@@ -21,8 +21,8 @@ function map_render($filepathfull)
 		$tbcolor = preg_replace("/[^0-9.]+/", "", $row_data[5]);
 		$rowdatax = ($row_data[1] + $linexmin) / $divnumx;
 		$rowdatay = ($tyline + $lineymin) / $divnumy;
-		if ($minyline > ($tyline - (strlen($textdisplay) * 4 ))) { echo "ctx.textAlign=\"left\";"; }
-		elseif ($maxyline < ($tyline + (strlen($textdisplay) * 4 ))) { echo "ctx.textAlign=\"right\";"; }
+		if ($minyline > ($tyline - (strlen($textdisplay) * ($fontsize * 0.6) ))) { echo "ctx.textAlign=\"left\";"; }
+		elseif ($maxyline < ($tyline + (strlen($textdisplay) * ($fontsize * 0.6) ))) { echo "ctx.textAlign=\"right\";"; }
 		else { echo "ctx.textAlign=\"center\";"; }
 		echo "ctx.fillStyle = 'rgb(". $trcolor. ", ".$tgcolor.", ". $tbcolor.")';";
 		echo "ctx.fillText('".$textdisplay."', ". $rowdatay .", ". $rowdatax .");";

@@ -1,7 +1,9 @@
 <?php require_once('includes/maprender.php');
 
-// set canvas max width, height will be dynamic to keep Aspect Ratio intact
+// set canvas max width and font size/type, height will be dynamic to keep Aspect Ratio intact
 $canvaswidth = '800';
+$fontsize = '10';
+$fonttype = 'Arial';
 
 // stuff past this point shouldn't need to be touched
 // unless you want to embed it in a page
@@ -179,7 +181,7 @@ Your browser does not support the canvas element.
 <script>
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-ctx.font = '10px arial';
+ctx.font = '<?php echo $fontsize; ?>px <?php echo $fonttype; ?>';
 <?php
 	// if base file is found - render it
 	if (file_exists($filepath)) {
