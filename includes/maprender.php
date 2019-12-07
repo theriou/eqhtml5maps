@@ -3,7 +3,7 @@ if (!defined('html5')) { die('Error'); }
 
 function map_render($filepathfull)
 	{
-		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline, $fontsize;
+		global $divnumy, $divnumx, $lineymin, $linexmin, $lineymax, $fontsize;
 	
 	$handle = fopen($filepathfull, "r");
     while (($line = fgets($handle)) !== false) {
@@ -23,8 +23,8 @@ function map_render($filepathfull)
 		$tbcolor = preg_replace("/[^0-9.]+/", "", $row_data[5]);
 		$rowdatax = ($row_data[1] + $linexmin) / $divnumx;
 		$rowdatay = ($tyline + $lineymin) / $divnumy;
-		if ($minyline > ($tyline - (strlen($textdisplay) * ($fontsize * 0.6) ))) { echo "ctx.textAlign=\"left\";"; }
-		elseif ($maxyline < ($tyline + (strlen($textdisplay) * ($fontsize * 0.6) ))) { echo "ctx.textAlign=\"right\";"; }
+		if ($lineymin > ($tyline - (strlen($textdisplay) * ($fontsize * 0.6) ))) { echo "ctx.textAlign=\"left\";"; }
+		elseif ($lineymax < ($tyline + (strlen($textdisplay) * ($fontsize * 0.6) ))) { echo "ctx.textAlign=\"right\";"; }
 		else { echo "ctx.textAlign=\"center\";"; }
 		echo "ctx.fillStyle = 'rgb(". $trcolor. ", ".$tgcolor.", ". $tbcolor.")';";
 		echo "ctx.fillText('".$textdisplay."', ". $rowdatay .", ". $rowdatax .");";

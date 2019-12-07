@@ -44,22 +44,22 @@ if ((file_exists($filepath)) OR (file_exists($filepath1)) OR (file_exists($filep
 	if ((filesize($filepath) > '0') OR (filesize($filepath1) > '0') OR (filesize($filepath2) > '0') OR (filesize($filepath3) > '0')) {
 		if (file_exists($filepath)) { 
 			if (filesize($filepath) > '0') {
-				list($lineytotal1, $linextotal1, $lineymin1, $linexmin1, $minyline1, $maxyline1) = map_limits($filepath);
+				list($lineytotal1, $linextotal1, $lineymin1, $linexmin1, $maxyline1) = map_limits($filepath);
 			}
 		}
 		if (file_exists($filepath1)) {
 			if (filesize($filepath1) > '0') { 
-				list($lineytotal2, $linextotal2, $lineymin2, $linexmin2, $minyline2, $maxyline2) = map_limits($filepath1);
+				list($lineytotal2, $linextotal2, $lineymin2, $linexmin2, $maxyline2) = map_limits($filepath1);
 			}
 		}
 		if (file_exists($filepath2)) { 
 			if (filesize($filepath2) > '0') { 
-				list($lineytotal3, $linextotal3, $lineymin3, $linexmin3, $minyline3, $maxyline3) = map_limits($filepath2);
+				list($lineytotal3, $linextotal3, $lineymin3, $linexmin3, $maxyline3) = map_limits($filepath2);
 			}
 		}
 		if (file_exists($filepath3)) { 
 			if (filesize($filepath3) > '0') { 
-				list($lineytotal4, $linextotal4, $lineymin4, $linexmin4, $minyline4, $maxyline4) = map_limits($filepath3);
+				list($lineytotal4, $linextotal4, $lineymin4, $linexmin4, $maxyline4) = map_limits($filepath3);
 			}
 		}
 	}
@@ -80,7 +80,6 @@ $linextotal = max($linextotal1, $linextotal2, $linextotal3, $linextotal4);
 $lineytotal = max($lineytotal1, $lineytotal2, $lineytotal3, $lineytotal4);
 $lineymin = max($lineymin1, $lineymin2, $lineymin3, $lineymin4);
 $linexmin = max($linexmin1, $linexmin2, $linexmin3, $linexmin4);
-$minyline = max($minyline1, $minyline2, $minyline3, $minyline4);
 $maxyline = max($maxyline1, $maxyline2, $maxyline3, $maxyline4);
 
 

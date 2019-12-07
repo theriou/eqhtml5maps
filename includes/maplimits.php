@@ -55,20 +55,15 @@ $handle = fopen($filepathini, "r");
 		$minxline = $mathxline2;
 	}
 	
-	// making all values positive, canvas can only start at 0,0 it is not Cartesian
-	if ($maxyline < '0') { $lineymax = $maxyline * -1; } else { $lineymax = $maxyline; }
-	if ($minyline < '0') { $lineymin = $minyline * -1; } else { $lineymin = $minyline; }
-	if ($maxxline < '0') { $linexmax = $maxxline * -1; } else { $linexmax = $maxxline; }
-	if ($minxline < '0') { $linexmin = $minxline * -1; } else { $linexmin = $minxline; }
-	
-	// adding the 2 together to get max distance between the 2 x points and 2 y points
-	$lineytotal = $lineymax + $lineymin;
-	$linextotal = $linexmax + $linexmin;
+	// adding the 2 positive numbers together to get max distance
+	// all values positive, Canvas can only start at 0,0 it is not Cartesian 
+	$lineytotal = (abs($maxyline)) + (abs($minyline));
+	$linextotal = (abs($maxxline)) + (abs($minxline));
 	
 	$i++;
 	}
 	fclose($handle);
 	
-	return array($lineytotal, $linextotal, $lineymin, $linexmin, $minyline, $maxyline);
+	return array($lineytotal, $linextotal, (abs($minyline)), (abs($minxline)), (abs($maxyline)));
 }
 ?>
