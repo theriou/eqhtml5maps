@@ -1,4 +1,6 @@
-<?php
+<?php 
+if (!defined('html5')) { die('Error'); }
+
 function map_render($filepathfull)
 	{
 		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline, $fontsize;

@@ -1,20 +1,21 @@
-<?php require_once('includes/maprender.php');
+<?php define('html5', 'map');
+require_once('includes/maprender.php');
+require_once('includes/maplimits.php');
 
-// set canvas max width and font size/type, height will be dynamic to keep Aspect Ratio intact
+// Set canvas max width and font size/type, height will be dynamic to keep Aspect Ratio intact
 $canvaswidth = '800';
 $fontsize = '10';
 $fonttype = 'Arial';
 
-// stuff past this point shouldn't need to be touched
-// unless you want to embed it in a page
+// Stuff past this point shouldn't need to be touched
+// Unless you want to Embed it in a page
 
 
-// if map is not set or it is blank - fail
-// otherwise try to get min/max to fit in canvas
+// If map is not set or it is blank - Show Pick Map options
+// If it is set continue to rendering and finding map bounds
 if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) {
     $mappicked = '0';
 }
-
 else {
 
 $mapsource1 = strtolower($_GET['map']);
@@ -25,125 +26,73 @@ $filepath1 = 'maps/'.$mapsource.'_1.txt';
 $filepath2 = 'maps/'.$mapsource.'_2.txt';
 $filepath3 = 'maps/'.$mapsource.'_3.txt';
 
-
-// some older maps have their layout on layer 1 with an empty base
-// so we need to find the first one that might be valid
-	if (file_exists($filepath)) { 
-		if (filesize($filepath) < '50') {
-			$filepathini = $filepath1;
-		}
-		else {
-			$filepathini = $filepath;
-		}
-	}
-	elseif (file_exists($filepath1)) {
-		if (filesize($filepath1) < '50') { 
-			$filepathini = $filepath2;
-		}
-		else {
-			$filepathini = $filepath1;
-		}
-	}
-	elseif (file_exists($filepath2)) { 
-		if (filesize($filepath2) < '50') { 
-			$filepathini = $filepath3;
-		}
-		else {
-			$filepathini = $filepath2;
-		}
-	}
-	elseif (file_exists($filepath3)) { 
-		if (filesize($filepath3) < '50') { 
-			$filefail = '1';
-		}
-		else {
-			$filepathini = $filepath3;
-		}
-	}
+// Setting some default values in case some map files aren't found
+$linextotal1 = 0;
+$linextotal2 = 0;
+$linextotal3 = 0;
+$linextotal4 = 0;
+$lineytotal1 = 0;
+$lineytotal2 = 0;
+$lineytotal3 = 0;
+$lineytotal4 = 0;
 
 
-if (file_exists($filepathini)) {
-
-$i = '0';
-
-// open file
-$handle = fopen($filepathini, "r");
-
-	// if file exists, go line by line in a loop
-	if ($handle) {
-    while (($line = fgets($handle)) !== false) {
-
-    // get map row data
-    $row_data = explode(',', $line);
-	
-	// adding variables from the data, only the #'s
-	$mathyline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
-	$mathyline1 = $mathyline11; 
-	$mathxline1 = $row_data[1];
-	$mathyline2 = $row_data[3];
-	$mathxline2 = $row_data[4];
-	
-	// set the values to the first #'s found
-	if ($i == '0') { 
-	$maxyline = $mathyline1;
-	$maxxline = $mathxline1;
-	$minyline = $mathyline2;
-	$minxline = $mathxline2;
+// Checking for Map Files, Then checking if they are > 0 bytes
+// If both succeed, get the potential min and max X and Y values
+// If both fail, set fail status
+if ((file_exists($filepath)) OR (file_exists($filepath1)) OR (file_exists($filepath2)) OR (file_exists($filepath3))) {
+	if ((filesize($filepath) > '0') OR (filesize($filepath1) > '0') OR (filesize($filepath2) > '0') OR (filesize($filepath3) > '0')) {
+		if (file_exists($filepath)) { 
+			if (filesize($filepath) > '0') {
+				list($lineytotal1, $linextotal1, $lineymin1, $linexmin1, $minyline1, $maxyline1) = map_limits($filepath);
+			}
+		}
+		if (file_exists($filepath1)) {
+			if (filesize($filepath1) > '0') { 
+				list($lineytotal2, $linextotal2, $lineymin2, $linexmin2, $minyline2, $maxyline2) = map_limits($filepath1);
+			}
+		}
+		if (file_exists($filepath2)) { 
+			if (filesize($filepath2) > '0') { 
+				list($lineytotal3, $linextotal3, $lineymin3, $linexmin3, $minyline3, $maxyline3) = map_limits($filepath2);
+			}
+		}
+		if (file_exists($filepath3)) { 
+			if (filesize($filepath3) > '0') { 
+				list($lineytotal4, $linextotal4, $lineymin4, $linexmin4, $minyline4, $maxyline4) = map_limits($filepath3);
+			}
+		}
 	}
-	
-	// get the minY, maxY, minX, maxX
-	if ($mathyline1 > $maxyline) {
-		$maxyline = $mathyline1;
-	}
-	if ($mathyline2 > $maxyline) {
-		$maxyline = $mathyline2;
-	}
-	if ($mathxline1 > $maxxline) {
-		$maxxline = $mathxline1;
-	}
-	if ($mathxline2 > $maxxline) {
-		$maxxline = $mathxline2;
-	}
-	if ($mathyline1 < $minyline) {
-		$minyline = $mathyline1;
-	}
-	if ($mathyline2 < $minyline) {
-		$minyline = $mathyline2;
-	}
-	if ($mathxline1 < $minxline) {
-		$minxline = $mathxline1;
-	}
-	if ($mathxline2 < $minxline) {
-		$minxline = $mathxline2;
-	}
-	
-	// making all values positive, canvas can only start at 0,0 it is not Cartesian
-	if ($maxyline < '0') { $lineymax = $maxyline * -1; } else { $lineymax = $maxyline; }
-	if ($minyline < '0') { $lineymin = $minyline * -1; } else { $lineymin = $minyline; }
-	if ($maxxline < '0') { $linexmax = $maxxline * -1; } else { $linexmax = $maxxline; }
-	if ($minxline < '0') { $linexmin = $minxline * -1; } else { $linexmin = $minxline; }
-	
-	// adding the 2 together to get max distance between the 2 x points and 2 y points
-	$lineytotal = $lineymax + $lineymin;
-	$linextotal = $linexmax + $linexmin;
-	
-	
-	// The map in EQ renders to the html5 canvas x,y at large values by default
-	// In some zones this is can be in the 2000-3000 range
-	// So we need to divide all #'s to not require a like 4000 pixel height/width page
-	// This should keep the Aspect Ratio intact while +/- the Height dynamically
-	$divnumy = $lineytotal / $canvaswidth;
-	$divnumx = $divnumy;
-	$canvasheight = (($linextotal / $lineytotal) * $canvaswidth) + 5;
-	
-	$i++;
-	}
+	else
+	{
+		$filefail = '1'; 
 	}
 }
-else {
-    // file doesn't exist
-	$filefail = '1';
-} }
+else 
+{ 
+	$filefail = '1'; 
+}
+
+// Getting the max values from every map file found to be used in the rendering later on
+// This should let any actual map render properly no matter which file its in
+// This is mostly a thing with older ones
+$linextotal = max($linextotal1, $linextotal2, $linextotal3, $linextotal4);
+$lineytotal = max($lineytotal1, $lineytotal2, $lineytotal3, $lineytotal4);
+$lineymin = max($lineymin1, $lineymin2, $lineymin3, $lineymin4);
+$linexmin = max($linexmin1, $linexmin2, $linexmin3, $linexmin4);
+$minyline = max($minyline1, $minyline2, $minyline3, $minyline4);
+$maxyline = max($maxyline1, $maxyline2, $maxyline3, $maxyline4);
+
+
+// The map in EQ renders to the html5 canvas x,y at large values by default
+// In some zones this is can be in the 2000-3000 range
+// So we need to divide all #'s to not require a like 4000 pixel height/width page
+// This should keep the Aspect Ratio intact while +/- the Height dynamically
+$divnumy = $lineytotal / $canvaswidth;
+$divnumx = $divnumy;
+$canvasheight = (($linextotal / $lineytotal) * $canvaswidth) + 5;
+
+}
 ?>
 <html>
 <head>
