@@ -9,7 +9,6 @@ $i = '0';
 $handle = fopen($filepathini, "r");
 
 	// if file exists, go line by line in a loop
-	if ($handle) {
     while (($line = fgets($handle)) !== false) {
 
     // get map row data
@@ -68,7 +67,8 @@ $handle = fopen($filepathini, "r");
 	
 	$i++;
 	}
-	}
+	fclose($handle);
+	
 	return array($lineytotal, $linextotal, $lineymin, $linexmin, $minyline, $maxyline);
 }
 ?>
