@@ -64,6 +64,6 @@ $handle = fopen($filepathini, "r");
 	}
 	fclose($handle);
 	
-	return array($lineytotal, $linextotal, (abs($minyline)), (abs($minxline)), (abs($maxyline)));
+	return array($lineytotal, $linextotal, $minyline, (abs($minyline)), (abs($minxline)), $maxyline, (abs($maxyline)));
 }
 ?>
