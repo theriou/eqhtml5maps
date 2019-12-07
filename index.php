@@ -27,13 +27,11 @@ $filepath2 = 'maps/'.$mapsource.'_2.txt';
 $filepath3 = 'maps/'.$mapsource.'_3.txt';
 
 // Setting some default values in case some map files aren't found
-$linextotal1 = 0; $linextotal2 = 0; $linextotal3 = 0; $linextotal4 = 0; 
 $lineytotal1 = 0; $lineytotal2 = 0; $lineytotal3 = 0; $lineytotal4 = 0; 
+$linextotal1 = 0; $linextotal2 = 0; $linextotal3 = 0; $linextotal4 = 0; 
 $minyline1 = 0; $minyline2 = 0; $minyline3 = 0; $minyline4 = 0; 
-$lineymin1 = 0; $lineymin2 = 0; $lineymin3 = 0; $lineymin4 = 0; 
 $linexmin1 = 0; $linexmin2 = 0; $linexmin3 = 0; $linexmin4 = 0; 
 $maxyline1 = 0; $maxyline2 = 0; $maxyline3 = 0; $maxyline4 = 0; 
-$lineymax1 = 0; $lineymax2 = 0; $lineymax3 = 0; $lineymax4 = 0; 
 
 // Checking for Map Files, Then checking if they are > 0 bytes
 // If both succeed, get the potential min and max X and Y values
@@ -42,22 +40,22 @@ if ((file_exists($filepath)) OR (file_exists($filepath1)) OR (file_exists($filep
 	if ((filesize($filepath) > '0') OR (filesize($filepath1) > '0') OR (filesize($filepath2) > '0') OR (filesize($filepath3) > '0')) {
 		if (file_exists($filepath)) { 
 			if (filesize($filepath) > '0') {
-				list($lineytotal1, $linextotal1, $minyline1, $lineymin1, $linexmin1, $maxyline1, $lineymax1) = map_limits($filepath);
+				list($lineytotal1, $linextotal1, $minyline1, $linexmin1, $maxyline1) = map_limits($filepath);
 			}
 		}
 		if (file_exists($filepath1)) {
 			if (filesize($filepath1) > '0') { 
-				list($lineytotal2, $linextotal2, $minyline2, $lineymin2, $linexmin2, $maxyline2, $lineymax2) = map_limits($filepath1);
+				list($lineytotal2, $linextotal2, $minyline2, $linexmin2, $maxyline2) = map_limits($filepath1);
 			}
 		}
 		if (file_exists($filepath2)) { 
 			if (filesize($filepath2) > '0') { 
-				list($lineytotal3, $linextotal3, $minyline3, $lineymin3, $linexmin3, $maxyline3, $lineymax3) = map_limits($filepath2);
+				list($lineytotal3, $linextotal3, $minyline3, $linexmin3, $maxyline3) = map_limits($filepath2);
 			}
 		}
 		if (file_exists($filepath3)) { 
 			if (filesize($filepath3) > '0') { 
-				list($lineytotal4, $linextotal4, $minyline4, $lineymin4, $linexmin4, $maxyline4, $lineymax4) = map_limits($filepath3);
+				list($lineytotal4, $linextotal4, $minyline4, $linexmin4, $maxyline4) = map_limits($filepath3);
 			}
 		}
 	}
@@ -76,11 +74,11 @@ else
 // This is mostly a thing with older ones
 $linextotal = max($linextotal1, $linextotal2, $linextotal3, $linextotal4);
 $lineytotal = max($lineytotal1, $lineytotal2, $lineytotal3, $lineytotal4);
-$lineymin = max($lineymin1, $lineymin2, $lineymin3, $lineymin4);
 $linexmin = max($linexmin1, $linexmin2, $linexmin3, $linexmin4);
 $maxyline = max($maxyline1, $maxyline2, $maxyline3, $maxyline4);
-$lineymax = max($lineymax1, $lineymax2, $lineymax3, $lineymax4);
+$lineymax = abs($maxyline);
 $minyline = min($minyline1, $minyline2, $minyline3, $minyline4);
+$lineymin = abs($minyline);
 
 
 // The map in EQ renders to the html5 canvas x,y at large values by default
