@@ -29,7 +29,7 @@ if (isset($_GET['cwidth']))
 		}
 		else
 		{
-			$canvaswidth = $_GET['cwidth'];
+			$canvaswidth = $cwidth;
 		}
 }
 else
@@ -40,10 +40,10 @@ $zmin = '-99999999999999999'; $zmax = '99999999999999999';
 if ((isset($_GET['zmin'])) OR (isset($_GET['zmax'])))
 {
 	if (isset($_GET['zmin'])) {
-		$zmin = $_GET['zmin']; if ($zmin == '') { $zmin = '-99999999999999999'; }
+		$zmin = preg_replace("/[^0-9]+/", "", $_GET['zmin']); if ($zmin == '') { $zmin = '-99999999999999999'; }
 	}
 	if (isset($_GET['zmax'])) {
-		$zmax = $_GET['zmax']; if ($zmax == '') { $zmax = '99999999999999999'; }
+		$zmax = preg_replace("/[^0-9]+/", "", $_GET['zmax']); if ($zmax == '') { $zmax = '99999999999999999'; }
 	}
 }
 
