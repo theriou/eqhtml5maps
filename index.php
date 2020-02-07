@@ -40,10 +40,10 @@ $zmin = '-99999999999999999'; $zmax = '99999999999999999';
 if ((isset($_GET['zmin'])) OR (isset($_GET['zmax'])))
 {
 	if (isset($_GET['zmin'])) {
-		$zmin = preg_replace("/[^0-9]+/", "", $_GET['zmin']); if ($zmin == '') { $zmin = '-99999999999999999'; }
+		$zmin = preg_replace("/[^-0-9]+/", "", $_GET['zmin']); if ($zmin == '') { $zmin = '-99999999999999999'; }
 	}
 	if (isset($_GET['zmax'])) {
-		$zmax = preg_replace("/[^0-9]+/", "", $_GET['zmax']); if ($zmax == '') { $zmax = '99999999999999999'; }
+		$zmax = preg_replace("/[^-0-9]+/", "", $_GET['zmax']); if ($zmax == '') { $zmax = '99999999999999999'; }
 	}
 }
 
