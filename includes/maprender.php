@@ -3,7 +3,7 @@ if (!defined('html5')) { die('Error'); }
 
 function map_render($filepathfull)
 	{
-		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline, $lineymax, $fontsize;
+		global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline, $lineymax, $fontsize, $zmin, $zmax, $zaxis;
 	
 	$handle = fopen($filepathfull, "r");
     while (($line = fgets($handle)) !== false) {
@@ -14,6 +14,11 @@ function map_render($filepathfull)
 	// if the line begins with a P - it is a Point on the map
 	// we need to remove the P and just get the # for its coords
 	if (strpos($row_data[0], 'P') !== false) {
+		if (($zmin > $row_data[2]) OR ($zmax < $row_data[2]))
+		{ 
+		} 
+		else
+		{
 		$tyline = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 		
 		// text to display on the html5 map, only allow specific characters
@@ -28,11 +33,16 @@ function map_render($filepathfull)
 		else { echo "ctx.textAlign=\"center\";"; }
 		echo "ctx.fillStyle = 'rgb(". $trcolor. ", ".$tgcolor.", ". $tbcolor.")';";
 		echo "ctx.fillText('".$textdisplay."', ". $rowdatay .", ". $rowdatax .");";
-		
+		}
     } else {
 	// The text file line didn't start with a P, so process the Lines
 	// then render the lines while this loops through the text file
 	// then adding the line mins to push it to start at 0,0 since it is not Cartesian
+		if ((($zmin > $row_data[2]) OR ($zmin > $row_data[5])) OR (($zmax < $row_data[2]) OR ($zmax < $row_data[5])))
+		{ 
+		} 
+		else 
+		{
 	$yline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 	$yline1 = ($yline11 + $lineymin) / $divnumy;
 	$xline1 = ($row_data[1] + $linexmin) / $divnumx;
@@ -47,8 +57,9 @@ function map_render($filepathfull)
 		echo "ctx.lineWidth = 1;";
 		echo "ctx.strokeStyle = 'rgb(".$rcolor.", ".$gcolor.", ".$bcolor.")';";
 		echo "ctx.stroke();";
+		}
 	}
 	}
 	fclose($handle);
-	}
+}
 ?>

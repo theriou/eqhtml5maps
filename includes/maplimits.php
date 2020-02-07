@@ -15,32 +15,51 @@ $handle = fopen($filepathini, "r");
     $row_data = explode(',', $line);
 	
 	// adding variables from the data, only the #'s
-	$mathyline11 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
-	$mathyline1 = $mathyline11; 
+	$mathyline1 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 	$mathxline1 = $row_data[1];
-	$mathyline2 = $row_data[3];
-	$mathxline2 = $row_data[4];
+	$mathzline1 = $row_data[2];
+	
+	if (strpos($row_data[0], 'L') !== false) 
+	{
+		$mathyline2 = $row_data[3];
+		$mathxline2 = $row_data[4];
+		$mathzline2 = $row_data[5];
+	}
+	else
+	{
+		$mathyline2 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
+		$mathxline2 = $row_data[1];
+		$mathzline2 = $row_data[2];
+	}
 	
 	// set the values to the first #'s found
 	if ($i == '0') { 
 	$maxyline = $mathyline1;
-	$maxxline = $mathxline1;
 	$minyline = $mathyline2;
+	$maxxline = $mathxline1;
 	$minxline = $mathxline2;
+	$maxzline = $mathzline1;
+	$minzline = $mathzline2;
 	}
 	
-	// get the minY, maxY, minX, maxX
-	if ($mathyline1 > $maxyline) {
-		$maxyline = $mathyline1;
-	}
-	if ($mathyline2 > $maxyline) {
-		$maxyline = $mathyline2;
-	}
+	// get the minY, maxY, minX, maxX, minZ, maxZ
 	if ($mathxline1 > $maxxline) {
 		$maxxline = $mathxline1;
 	}
 	if ($mathxline2 > $maxxline) {
 		$maxxline = $mathxline2;
+	}
+	if ($mathxline1 < $minxline) {
+		$minxline = $mathxline1;
+	}
+	if ($mathxline2 < $minxline) {
+		$minxline = $mathxline2;
+	}
+	if ($mathyline1 > $maxyline) {
+		$maxyline = $mathyline1;
+	}
+	if ($mathyline2 > $maxyline) {
+		$maxyline = $mathyline2;
 	}
 	if ($mathyline1 < $minyline) {
 		$minyline = $mathyline1;
@@ -48,11 +67,17 @@ $handle = fopen($filepathini, "r");
 	if ($mathyline2 < $minyline) {
 		$minyline = $mathyline2;
 	}
-	if ($mathxline1 < $minxline) {
-		$minxline = $mathxline1;
+	if ($mathzline1 > $maxzline) {
+		$maxzline = $mathzline1;
 	}
-	if ($mathxline2 < $minxline) {
-		$minxline = $mathxline2;
+	if ($mathzline2 > $maxzline) {
+		$maxzline = $mathzline2;
+	}
+	if ($mathzline1 < $minzline) {
+		$minzline = $mathzline1;
+	}
+	if ($mathzline2 < $minzline) {
+		$minzline = $mathzline2;
 	}
 	
 	// adding the 2 positive numbers together to get max distance
@@ -64,6 +89,6 @@ $handle = fopen($filepathini, "r");
 	}
 	fclose($handle);
 	
-	return array($lineytotal, $linextotal, $minyline, (abs($minxline)), $maxyline);
+	return array($lineytotal, $linextotal, $minyline, (abs($minxline)), $maxyline, $maxzline, $minzline);
 }
 ?>
