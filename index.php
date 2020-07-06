@@ -23,28 +23,17 @@ else {
 if (isset($_GET['cwidth']))
 { 
 	$cwidth = preg_replace("/[^0-9]+/", "", $_GET['cwidth']);
-		if ($cwidth == '') 
-		{ 
-			$canvaswidth = $canvaswidth; 
-		}
-		else
-		{
-			$canvaswidth = $cwidth;
-		}
-}
-else
-{
-}
+	$canvaswidth = ($cwidth == '') ? $canvaswidth : $cwidth;
+} else { }
 
 $zmin = '-99999999999999999'; $zmax = '99999999999999999';
-if ((isset($_GET['zmin'])) OR (isset($_GET['zmax'])))
-{
-	if (isset($_GET['zmin'])) {
-		$zmin = preg_replace("/[^-0-9]+/", "", $_GET['zmin']); if ($zmin == '') { $zmin = '-99999999999999999'; }
-	}
-	if (isset($_GET['zmax'])) {
-		$zmax = preg_replace("/[^-0-9]+/", "", $_GET['zmax']); if ($zmax == '') { $zmax = '99999999999999999'; }
-	}
+if (isset($_GET['zmin'])) {
+	$zmin = preg_replace("/[^-0-9]+/", "", $_GET['zmin']); 
+		if ($zmin == '') { $zmin = '-99999999999999999'; }
+}
+if (isset($_GET['zmax'])) {
+	$zmax = preg_replace("/[^-0-9]+/", "", $_GET['zmax']); 
+		if ($zmax == '') { $zmax = '99999999999999999'; }
 }
 
 $mapsource1 = strtolower($_GET['map']);
@@ -64,28 +53,28 @@ $maxyline1 = 0; $maxyline2 = 0; $maxyline3 = 0; $maxyline4 = 0;
 $maxzline1 = 0; $maxzline2 = 0; $maxzline3 = 0; $maxzline4 = 0;
 $minzline1 = 0; $minzline2 = 0; $minzline3 = 0; $minzline4 = 0;
 
-// Checking for Map Files, Then checking if they are > 0 bytes
+// Checking for Map Files, Then checking if they are > 5000 bytes
 // If both succeed, get the potential min and max X and Y values
 // If both fail, set fail status
 if ((file_exists($filepath)) OR (file_exists($filepath1)) OR (file_exists($filepath2)) OR (file_exists($filepath3))) {
-	if ((filesize($filepath) > '0') OR (filesize($filepath1) > '0') OR (filesize($filepath2) > '0') OR (filesize($filepath3) > '0')) {
+	if ((filesize($filepath) > '5000') OR (filesize($filepath1) > '5000') OR (filesize($filepath2) > '5000') OR (filesize($filepath3) > '5000')) {
 		if (file_exists($filepath)) { 
-			if (filesize($filepath) > '0') {
+			if (filesize($filepath) > '5000') {
 				list($lineytotal1, $linextotal1, $minyline1, $linexmin1, $maxyline1, $maxzline1, $minzline1) = map_limits($filepath);
 			}
 		}
 		if (file_exists($filepath1)) {
-			if (filesize($filepath1) > '0') { 
+			if (filesize($filepath1) > '5000') { 
 				list($lineytotal2, $linextotal2, $minyline2, $linexmin2, $maxyline2, $maxzline2, $minzline2) = map_limits($filepath1);
 			}
 		}
 		if (file_exists($filepath2)) { 
-			if (filesize($filepath2) > '0') { 
+			if (filesize($filepath2) > '5000') { 
 				list($lineytotal3, $linextotal3, $minyline3, $linexmin3, $maxyline3, $maxzline3, $minzline3) = map_limits($filepath2);
 			}
 		}
 		if (file_exists($filepath3)) { 
-			if (filesize($filepath3) > '0') { 
+			if (filesize($filepath3) > '5000') { 
 				list($lineytotal4, $linextotal4, $minyline4, $linexmin4, $maxyline4, $maxzline4, $minzline4) = map_limits($filepath3);
 			}
 		}
@@ -143,8 +132,8 @@ body {
 		foreach (glob("maps/*.txt") as $filename) { 
 		$filename = str_replace("maps/", "", $filename);
 		$filename = str_replace(".txt", "", $filename);
+			// ignore files with _ in them and only list the base file versions
 			if (stripos($filename, "_") !== false) {
-				// ignore files with _ in them and only list the base file versions
 			} else {
 				?><a href="maptesting.php?map=<?php echo $filename; ?>"><?php echo $filename; ?></a><?php echo "<br>";
 			}
@@ -158,9 +147,9 @@ body {
 		echo "<br>Min Z: " . $linezmin . " - Max Z: " . $linezmax . "<br><br>";
 ?>
 	<form action="maptesting.php" method="GET">
-	Min Z <textarea rows="1" cols="10" name="zmin"><?php if (isset($_GET['zmin'])) { echo $_GET['zmin']; } else { } ?></textarea> - 
-	Max Z <textarea rows="1" cols="10" name="zmax"><?php if (isset($_GET['zmax'])) { echo $_GET['zmax']; } else { } ?></textarea> -
-	Canvas Width <textarea rows="1" cols="10" name="cwidth"><?php if (isset($_GET['cwidth'])) { echo $_GET['cwidth']; } else { } ?></textarea>
+	Min Z <textarea rows="1" cols="10" name="zmin"><?php echo (isset($_GET['zmin'])) ? $_GET['zmin'] : ''; ?></textarea> - 
+	Max Z <textarea rows="1" cols="10" name="zmax"><?php echo (isset($_GET['zmax'])) ? $_GET['zmax'] : ''; ?></textarea> -
+	Canvas Width <textarea rows="1" cols="10" name="cwidth"><?php echo (isset($_GET['cwidth'])) ? $_GET['cwidth'] : ''; ?></textarea>
 	<input name="map" type="hidden" id="map" value="<?php echo $mapsource; ?>">
 	<input type="Submit" value="Submit" name="Submit">
 	</form>
@@ -204,7 +193,7 @@ ctx.font = '<?php echo $fontsize; ?>px <?php echo $fonttype; ?>';
 	} 
 	else 
 	{
-		echo "Map Failed to load or doesn't exist in a valid format. Try again later or pick a different map.";
+		echo "Map Failed to Load or isn't a Valid Format. Try again or pick a different Map.";
 	}
 ?>
 </body>
