@@ -57,31 +57,17 @@ $minzline1 = 0; $minzline2 = 0; $minzline3 = 0; $minzline4 = 0;
 // If both succeed, get the potential min and max X and Y values
 // If both fail, set fail status
 if ((file_exists($filepath)) OR (file_exists($filepath1)) OR (file_exists($filepath2)) OR (file_exists($filepath3))) {
-	if ((filesize($filepath) > '5000') OR (filesize($filepath1) > '5000') OR (filesize($filepath2) > '5000') OR (filesize($filepath3) > '5000')) {
-		if (file_exists($filepath)) { 
-			if (filesize($filepath) > '5000') {
-				list($lineytotal1, $linextotal1, $minyline1, $linexmin1, $maxyline1, $maxzline1, $minzline1) = map_limits($filepath);
-			}
-		}
-		if (file_exists($filepath1)) {
-			if (filesize($filepath1) > '5000') { 
-				list($lineytotal2, $linextotal2, $minyline2, $linexmin2, $maxyline2, $maxzline2, $minzline2) = map_limits($filepath1);
-			}
-		}
-		if (file_exists($filepath2)) { 
-			if (filesize($filepath2) > '5000') { 
-				list($lineytotal3, $linextotal3, $minyline3, $linexmin3, $maxyline3, $maxzline3, $minzline3) = map_limits($filepath2);
-			}
-		}
-		if (file_exists($filepath3)) { 
-			if (filesize($filepath3) > '5000') { 
-				list($lineytotal4, $linextotal4, $minyline4, $linexmin4, $maxyline4, $maxzline4, $minzline4) = map_limits($filepath3);
-			}
-		}
+	if (file_exists($filepath)) { 
+			list($lineytotal1, $linextotal1, $minyline1, $linexmin1, $maxyline1, $maxzline1, $minzline1) = map_limits($filepath);
 	}
-	else
-	{
-		$filefail = '1'; 
+	if (file_exists($filepath1)) {
+		list($lineytotal2, $linextotal2, $minyline2, $linexmin2, $maxyline2, $maxzline2, $minzline2) = map_limits($filepath1);
+	}
+	if (file_exists($filepath2)) { 
+			list($lineytotal3, $linextotal3, $minyline3, $linexmin3, $maxyline3, $maxzline3, $minzline3) = map_limits($filepath2);
+	}
+	if (file_exists($filepath3)) { 
+			list($lineytotal4, $linextotal4, $minyline4, $linexmin4, $maxyline4, $maxzline4, $minzline4) = map_limits($filepath3);
 	}
 }
 else 
