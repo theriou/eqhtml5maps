@@ -26,12 +26,14 @@ function map_limits($filepathini)
 	
 			if (strpos($row_data[0], 'L') !== false) 
 			{
+				$points = 1;
 				$mathyline2 = $row_data[3];
 				$mathxline2 = $row_data[4];
 				$mathzline2 = $row_data[5];
 			}
 			else
 			{
+				$points = 0;
 				$mathyline2 = preg_replace("/[^-0-9.]+/", "", $row_data[0]);
 				$mathxline2 = $row_data[1];
 				$mathzline2 = $row_data[2];
@@ -99,6 +101,10 @@ function map_limits($filepathini)
 
 			// adding the 2 positive numbers together to get max distance
 			// all values positive, Canvas can only start at 0,0 it is not Cartesian 
+			if ($points == 1) 
+			{ 
+				$maxyline = 0; $maxxline = 0; 
+			}
 			$lineytotal = (abs($maxyline)) + (abs($minyline));
 			$linextotal = (abs($maxxline)) + (abs($minxline));
 	
@@ -107,6 +113,6 @@ function map_limits($filepathini)
 	}
 	fclose($handle);
 	
-	return array($lineytotal, $linextotal, $minyline, (abs($minxline)), $maxyline, $maxzline, $minzline);
+	return array($lineytotal, $linextotal, $minyline, $minxline, $maxyline, $maxzline, $minzline);
 }
 ?>
