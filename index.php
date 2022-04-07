@@ -86,27 +86,31 @@ else
 	{ 
 		$filefail = '1'; 
 	}
+	
+	if ($filefail != '1')
+	{
 
-	// Getting the max values from every map file found to be used in the rendering later on
-	// This should let any actual map render properly no matter which file its in
-	// This is mostly a thing with older ones
-	$linextotal = max(array_filter([$linextotal1, $linextotal2, $linextotal3, $linextotal4]));
-	$lineytotal = max(array_filter([$lineytotal1, $lineytotal2, $lineytotal3, $lineytotal4]));
-	$linexmin = abs(min(array_filter([$linexmin1, $linexmin2, $linexmin3, $linexmin4])));
-	$maxyline = max(array_filter([$maxyline1, $maxyline2, $maxyline3, $maxyline4]));
-	$lineymax = abs($maxyline);
-	$minyline = min(array_filter([$minyline1, $minyline2, $minyline3, $minyline4]));
-	$lineymin = abs($minyline);
-	$linezmax = max(array_filter([$maxzline1, $maxzline2, $maxzline3, $maxzline4]));
-	$linezmin = min(array_filter([$minzline1, $minzline2, $minzline3, $minzline4]));
+		// Getting the max values from every map file found to be used in the rendering later on
+		// This should let any actual map render properly no matter which file its in
+		// This is mostly a thing with older ones
+		$linextotal = max(array_filter([$linextotal1, $linextotal2, $linextotal3, $linextotal4]));
+		$lineytotal = max(array_filter([$lineytotal1, $lineytotal2, $lineytotal3, $lineytotal4]));
+		$linexmin = abs(min(array_filter([$linexmin1, $linexmin2, $linexmin3, $linexmin4])));
+		$maxyline = max(array_filter([$maxyline1, $maxyline2, $maxyline3, $maxyline4]));
+		$lineymax = abs($maxyline);
+		$minyline = min(array_filter([$minyline1, $minyline2, $minyline3, $minyline4]));
+		$lineymin = abs($minyline);
+		$linezmax = max(array_filter([$maxzline1, $maxzline2, $maxzline3, $maxzline4]));
+		$linezmin = min(array_filter([$minzline1, $minzline2, $minzline3, $minzline4]));
 
-	// The map in EQ renders to the html5 canvas x,y at large values by default
-	// In some zones this is can be in the 2000-3000 range
-	// So we need to divide all #'s to not require a like 4000 pixel height/width page
-	// This should keep the Aspect Ratio intact while +/- the Height dynamically
-	$divnumy = $lineytotal / $canvaswidth;
-	$divnumx = $divnumy;
-	$canvasheight = (($linextotal / $lineytotal) * $canvaswidth) + 5;
+		// The map in EQ renders to the html5 canvas x,y at large values by default
+		// In some zones this is can be in the 2000-3000 range
+		// So we need to divide all #'s to not require a like 4000 pixel height/width page
+		// This should keep the Aspect Ratio intact while +/- the Height dynamically
+		$divnumy = $lineytotal / $canvaswidth;
+		$divnumx = $divnumy;
+		$canvasheight = (($linextotal / $lineytotal) * $canvaswidth) + 5;
+	}
 }
 ?>
 <html>
