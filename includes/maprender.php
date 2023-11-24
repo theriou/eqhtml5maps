@@ -6,14 +6,19 @@ function map_render($filepathfull)
 	global $divnumy, $divnumx, $lineymin, $linexmin, $minyline, $maxyline, $lineymax, $fontsize, $zmin, $zmax, $zaxis;
 	
 	$handle = fopen($filepathfull, "r");
-	while (($line = fgets($handle)) !== false) 
+    while (($line = fgets($handle)) !== false) {
+	if (empty(trim($line))) 
+	{
+	}
+	else 
 	{
     	// get map row data
     	$row_data = explode(',', $line);
 	
 		// if the line begins with a P - it is a Point on the map
 		// we need to remove the P and just get the # for its coords
-		if (strpos($row_data[0], 'P') !== false) {
+		if (strpos($row_data[0], 'P') !== false) 
+		{
 			if (($zmin > $row_data[2]) OR ($zmax < $row_data[2]))
 			{ 
 			} 
@@ -34,8 +39,10 @@ function map_render($filepathfull)
 				echo "ctx.fillStyle = 'rgb(". $trcolor. ", ".$tgcolor.", ". $tbcolor.")';";
 				echo "ctx.fillText('".$textdisplay."', ". $rowdatay .", ". $rowdatax .");";
 			}
-    	} else {
-			// The text file line didn't start with a P, so process the Lines
+		} 
+		else if (strpos($row_data[0], 'L') !== false) 
+		{
+			// The text file line starts with an L, so process the Lines
 			// then render the lines while this loops through the text file
 			// then adding the line mins to push it to start at 0,0 since it is not Cartesian
 			if ((($zmin > $row_data[2]) OR ($zmin > $row_data[5])) OR (($zmax < $row_data[2]) OR ($zmax < $row_data[5])))
@@ -57,8 +64,13 @@ function map_render($filepathfull)
 				echo "ctx.lineWidth = 1;";
 				echo "ctx.strokeStyle = 'rgb(".$rcolor.", ".$gcolor.", ".$bcolor.")';";
 				echo "ctx.stroke();";
-			}
+			} 
 		}
+		else
+		{
+			//Invalid Line Start, Ignore
+		}
+	}
 	}
 	fclose($handle);
 }

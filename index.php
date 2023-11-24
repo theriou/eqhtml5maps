@@ -5,6 +5,7 @@ require_once('includes/maplimits.php');
 // Set canvas max width and font size/type, height will be dynamic to keep Aspect Ratio intact
 // Set if you want Z Axis control to 1 instead of 0, this lets you edit Z Axis and canvas width on page as Form
 $canvaswidth = '800';
+$canvasheight = '800';
 $fontsize = '10';
 $fonttype = 'Arial';
 $zaxis = '0';
@@ -17,10 +18,12 @@ $zaxis = '0';
 // If it is set continue to rendering and finding map bounds
 if ((!isset($_GET['map'])) OR ($_GET['map'] == '')) 
 {
-    $mappicked = '0';
+	$mappicked = '0';
+	$filefail = '0';
 }
 else 
 {
+	$mappicked = '1';
 	if (isset($_GET['cwidth']))
 	{ 
 		$cwidth = preg_replace("/[^0-9]+/", "", $_GET['cwidth']);
@@ -69,18 +72,19 @@ else
 	// If both succeed, get the potential min and max X and Y values
 	// If both fail, set fail status
 	if ((file_exists($filepath)) OR (file_exists($filepath1)) OR (file_exists($filepath2)) OR (file_exists($filepath3))) {
-		if (file_exists($filepath)) { 
+		if (file_exists($filepath) && (filesize($filepath) != 0)) { 
 			list($lineytotal1, $linextotal1, $minyline1, $linexmin1, $maxyline1, $maxzline1, $minzline1) = map_limits($filepath);
 		}
-		if (file_exists($filepath1)) {
+		if (file_exists($filepath1) && (filesize($filepath1) != 0)) {
 			list($lineytotal2, $linextotal2, $minyline2, $linexmin2, $maxyline2, $maxzline2, $minzline2) = map_limits($filepath1);
 		}
-		if (file_exists($filepath2)) { 
+		if (file_exists($filepath2) && (filesize($filepath2) != 0)) { 
 			list($lineytotal3, $linextotal3, $minyline3, $linexmin3, $maxyline3, $maxzline3, $minzline3) = map_limits($filepath2);
 		}
-		if (file_exists($filepath3)) { 
+		if (file_exists($filepath3) && (filesize($filepath3) != 0)) { 
 			list($lineytotal4, $linextotal4, $minyline4, $linexmin4, $maxyline4, $maxzline4, $minzline4) = map_limits($filepath3);
 		}
+		$filefail = '0';
 	}
 	else 
 	{ 
@@ -115,7 +119,7 @@ else
 ?>
 <html>
 <head>
-<title><?php if ($mapsource) { echo "Map of " . $mapsource; } else { echo "Choose a Map"; } ?></title>
+<title><?php if (isset($mapsource)) { echo "Map of ".$mapsource; } else { echo "Choose a Map"; } ?></title>
 <style>
 body {
     background-image: url("images/cart.png");
@@ -147,7 +151,7 @@ if ($mappicked == '0')
 // if the base file existed, continue to render
 if ($filefail != '1') 
 {
-	if ($zaxis == '1') 
+	if (($zaxis == '1') && (isset($linezmin) && (isset($linezmax))))
 	{
 		echo "<br>Min Z: " . $linezmin . " - Max Z: " . $linezmax . "<br><br>";
 ?>
@@ -174,28 +178,28 @@ var ctx = canvas.getContext("2d");
 ctx.font = '<?php echo $fontsize; ?>px <?php echo $fonttype; ?>';
 <?php
 	// if base file is found - render it
-	if (file_exists($filepath)) 
-		{
-			map_render($filepath);
-		}
-
-		// if base_1 file is found - render it
-		if (file_exists($filepath1)) 
-		{
-			map_render($filepath1);
-		}
-
-		// if base_2 file is found - render it
-		if (file_exists($filepath2)) 
-		{
-			map_render($filepath2);
-		}
+	if (isset($filepath) && file_exists($filepath) && (filesize($filepath) != 0)) 
+	{
+		map_render($filepath);
+	}
 	
-		// if base_3 file is found - render it
-		if (file_exists($filepath3)) 
-		{
-			map_render($filepath3);
-		}
+	// if base_1 file is found - render it
+	if (isset($filepath1) && file_exists($filepath1) && (filesize($filepath1) != 0))
+	{
+		map_render($filepath1);
+	}
+	
+	// if base_2 file is found - render it
+	if (isset($filepath2) && file_exists($filepath2) && (filesize($filepath2) != 0))
+	{
+		map_render($filepath2);
+	}
+	
+	// if base_3 file is found - render it
+	if (isset($filepath3) && file_exists($filepath3) && (filesize($filepath3) != 0))
+	{
+		map_render($filepath3);
+	}
 ?>
 </script>
 <?php
